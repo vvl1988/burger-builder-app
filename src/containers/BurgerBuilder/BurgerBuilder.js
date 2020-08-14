@@ -17,7 +17,15 @@ class BurgerBuilder extends Component {
       meat: 0,
     },
     totalPrice: 0,
+    purchaseable: false,
   };
+
+  updatePurchaseState(ingredients) {    
+    const sum = Object.keys(ingredients)
+      .map((igKey) => ingredients[igKey])
+      .reduce((total, curr) => total + curr, 0);
+    this.setState({ purchaseable: sum > 0 });
+  }
 
   addIngredientHandler = (type) => {
     const oldCount = this.state.ingredients[type];
@@ -28,6 +36,7 @@ class BurgerBuilder extends Component {
     const oldPrice = this.state.totalPrice;
     const newPrice = oldPrice + priceAddition;
     this.setState({ totalPrice: newPrice, ingredients: updatedIngredients });
+    this.updatePurchaseState(updatedIngredients);
   };
 
   removeIngredientHandler = (type) => {
@@ -43,12 +52,13 @@ class BurgerBuilder extends Component {
     const oldPrice = this.state.totalPrice;
     const newPrice = oldPrice + priceDeduction;
     this.setState({ totalPrice: newPrice, ingredients: updatedIngredients });
+    this.updatePurchaseState(updatedIngredients);
   };
 
   render() {
-    const disableInfo = {...this.state.ingredients};
-    for(let key in disableInfo){
-      disableInfo[key] = disableInfo[key]<=0;
+    const disableInfo = { ...this.state.ingredients };
+    for (let key in disableInfo) {
+      disableInfo[key] = disableInfo[key] <= 0;
     }
     return (
       <React.Fragment>
@@ -57,6 +67,7 @@ class BurgerBuilder extends Component {
           disableInfo={disableInfo}
           ingredientAdded={this.addIngredientHandler}
           ingredientRemoved={this.removeIngredientHandler}
+          purchaseable={this.state.purchaseable}
           price={this.state.totalPrice}
         />
       </React.Fragment>
