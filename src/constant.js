@@ -1,0 +1,1 @@
+export const FIRE_BASE_URL = 'https://react-burger-builder-7a955.firebaseio.com/';
