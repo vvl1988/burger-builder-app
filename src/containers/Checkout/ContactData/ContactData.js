@@ -16,26 +16,30 @@ class ContactData extends Component {
       "input",
       "text",
       "Your Name",
-      ""
+      "",
+      { required: true }
     );
     const street = this.createInputElementConfig("input", "text", "Street", "");
     const zipCode = this.createInputElementConfig(
       "input",
       "text",
       "ZIP Code",
-      ""
+      "",
+      { required: true, minLength: 5, maxLength:5 }
     );
     const country = this.createInputElementConfig(
       "input",
       "text",
       "Country",
-      ""
+      "",
+      { required: true }
     );
     const email = this.createInputElementConfig(
       "input",
       "email",
       "Your Mail",
-      ""
+      "",
+      { required: true }
     );
     const deliveryMethod = {
       elementType: "select",
@@ -45,7 +49,7 @@ class ContactData extends Component {
           { value: "cheapest", displayValue: "Cheapest" },
         ],
       },
-      value: "",
+      value: "fastest",
     };
 
     const orderForm = {
@@ -59,32 +63,35 @@ class ContactData extends Component {
     this.setState({ orderForm: orderForm });
   }
 
-  createInputElementConfig(elementType, type, placeholder, defaultValue) {
+  createInputElementConfig(
+    elementType,
+    type,
+    placeholder,
+    defaultValue,
+    validation
+  ) {
     return {
       elementType: elementType,
       elementConfig: {
         type: type,
         placeholder: placeholder,
       },
+      validation: validation,
+      isValid: false,
       value: defaultValue,
     };
   }
   orderHandler = (event) => {
     event.preventDefault();
     this.setState({ loading: true });
+    const formData = {};
+    for (let formElementID in this.state.orderForm) {
+      formData[formElementID] = this.state.orderForm[formElementID].value;
+    }
     const order = {
       ingredients: this.props.ingredients,
       price: this.props.price,
-      customer: {
-        name: "Loi",
-        address: {
-          street: "Khai Tay 2",
-          zipCode: "50000",
-          country: "VietNam",
-        },
-        email: "lvv1988@gmail.com",
-      },
-      deliveryMethod: "fastest",
+      customer: formData,
     };
     axios
       .post("/orders.json", order)
@@ -99,13 +106,31 @@ class ContactData extends Component {
       });
   };
 
-  inputChangedHandler =(event, inputID) => {
-    const updatedOrderForm = {...this.state.orderForm};
-    const updatedFormElement = {...updatedOrderForm[inputID]};
+  inputChangedHandler = (event, inputID) => {
+    const updatedOrderForm = { ...this.state.orderForm };
+    const updatedFormElement = { ...updatedOrderForm[inputID] };
     updatedFormElement.value = event.target.value;
+    updatedFormElement.isValid=this.checkValidation(updatedFormElement.value, updatedFormElement.validation);
     updatedOrderForm[inputID] = updatedFormElement;
-    this.setState({orderForm: updatedOrderForm});
-    console.log(this.state);
+    console.log(updatedFormElement);
+    this.setState({ orderForm: updatedOrderForm });
+  };
+
+  checkValidation(value, rules) {
+    let isValid = true;
+    if (rules.required) {
+      isValid = isValid && (value.trim() !== "");
+    }
+
+    if(rules.minLength){
+      isValid = isValid && (value.length >= rules.minLength);
+    }
+
+    if(rules.maxLength){
+      isValid = isValid && (value.length <= rules.maxLength);
+    }
+
+    return isValid;
   }
 
   render() {
@@ -117,7 +142,7 @@ class ContactData extends Component {
       });
     }
     let form = (
-      <form>
+      <form onSubmit={this.orderHandler}>
         {inputElements.map((el) => {
           return (
             <Input
@@ -125,13 +150,11 @@ class ContactData extends Component {
               elementType={el.config.elementType}
               elementConfig={el.config.elementConfig}
               defaultValue={el.config.defaultValue}
-              changed={(event)=>this.inputChangedHandler(event, el.id)}
+              changed={(event) => this.inputChangedHandler(event, el.id)}
             />
           );
         })}
-        <Button buttonType="Success" clicked={this.orderHandler}>
-          ORDER
-        </Button>
+        <Button buttonType="Success">ORDER</Button>
       </form>
     );
     if (this.state.loading) {
