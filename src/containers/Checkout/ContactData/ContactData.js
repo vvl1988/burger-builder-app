@@ -8,6 +8,7 @@ import Input from "../../../components/UI/Input/Input";
 class ContactData extends Component {
   state = {
     orderForm: null,
+    formIsValid:false,
     loading: false,
   };
 
@@ -55,6 +56,7 @@ class ContactData extends Component {
           { value: "cheapest", displayValue: "Cheapest" },
         ],
       },
+      validation:{},
       isValid: true,
       value: "fastest",
     };
@@ -126,12 +128,21 @@ class ContactData extends Component {
       );
     }
     updatedOrderForm[inputID] = updatedFormElement;
-    console.log(updatedFormElement);
-    this.setState({ orderForm: updatedOrderForm });
+
+    let formIsValid = true;
+    for(let id in updatedOrderForm){
+      formIsValid = updatedOrderForm[id].isValid && formIsValid;
+    }
+
+    this.setState({ orderForm: updatedOrderForm, formIsValid:formIsValid });
   };
 
   checkValidation(value, rules) {
     let isValid = true;
+    if(!rules)
+    {
+      return true;
+    }
     if (rules.required) {
       isValid = isValid && value.trim() !== "";
     }
@@ -171,7 +182,7 @@ class ContactData extends Component {
             />
           );
         })}
-        <Button buttonType="Success">ORDER</Button>
+        <Button buttonType="Success" disabled={!this.state.formIsValid}>ORDER</Button>
       </form>
     );
     if (this.state.loading) {
