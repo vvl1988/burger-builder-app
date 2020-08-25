@@ -30,3 +30,9 @@
     border: 1px solid red;
     background-color: rgb(250, 169, 160);
 }
+
+.ValidatorError{
+    color: red;
+    margin: 2px 10px;
+    text-align: start;
+}
