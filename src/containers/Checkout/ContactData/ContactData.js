@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import {connect} from 'react-redux';
 import Button from "../../../components/UI/Button/Button";
 import Spinner from "../../../components/UI/Spinner/Spinner";
 import classes from "./ContactData.module.css";
@@ -32,7 +33,7 @@ class ContactData extends Component {
       "text",
       "ZIP Code",
       "",
-      { required: true, minLength: 5, maxLength: 5 }
+      { required: true, minLength: 5, maxLength: 5, isNumeric: true }
     );
     const country = this.createInputElementConfig(
       "input",
@@ -46,7 +47,7 @@ class ContactData extends Component {
       "email",
       "Your Mail",
       "",
-      { required: true }
+      { required: true, isEmail: true }
     );
     const deliveryMethod = {
       elementType: "select",
@@ -155,6 +156,16 @@ class ContactData extends Component {
       isValid = isValid && value.length <= rules.maxLength;
     }
 
+    if (rules.isEmail) {
+      const pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
+      isValid = pattern.test(value) && isValid;
+  }
+
+  if (rules.isNumeric) {
+      const pattern = /^\d+$/;
+      isValid = pattern.test(value) && isValid;
+  }
+
     return isValid;
   }
 
@@ -197,4 +208,9 @@ class ContactData extends Component {
   }
 }
 
-export default ContactData;
+const mapStateToProps = state =>{
+  return{ingredients: state.ingredients, price: state.totalPice
+  }
+}
+
+export default connect(mapStateToProps)(ContactData);
