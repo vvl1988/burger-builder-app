@@ -1,12 +1,12 @@
 import * as actionTypes from "../actions/actionTypes";
 import { INGREDIENT_PRICES } from "../../constant";
 const initState = {
-  ingredients: { bacon: 0, cheese: 0, meat: 0, salad: 0 },
+  ingredients: null,
   totalPrice: 4,
+  error: false,
 };
 
 const reducer = (state = initState, action) => {
-  console.log(state);
   switch (action.type) {
     case actionTypes.ADD_INGREDIENT:
       return {
@@ -23,10 +23,21 @@ const reducer = (state = initState, action) => {
         ...state,
         ingredients: {
           ...state.ingredients,
-          [action.ing]: state.ingredients[action.ing] - 1
+          [action.ing]: state.ingredients[action.ing] - 1,
         },
-        totalPrice: state.totalPrice - INGREDIENT_PRICES[action.ing]
-      }
+        totalPrice: state.totalPrice - INGREDIENT_PRICES[action.ing],
+      };
+    case actionTypes.SET_INGREDIENT:
+      return {
+        ...state,
+        ingredients: action.ingredients,
+        error: false
+      };
+    case actionTypes.FETCH_INGREDIENT_FAILED:
+      return {
+        ...state,
+        error: true,
+      };
     default:
       return state;
   }
