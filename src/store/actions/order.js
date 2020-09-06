@@ -44,27 +44,27 @@ export const purchaseBurger = (orderData) => {
 
 export const fetchOrderSuccess = (orders) => {
   return {
-    type: actionTypes.FETCH_ORDER_SUCCESS,
+    type: actionTypes.FETCH_ORDERS_SUCCESS,
     orders,
   };
 };
 
 export const fetchOrderfail = (error) => {
   return {
-    type: actionTypes.FETCH_ORDER_FAIL,
+    type: actionTypes.FETCH_ORDERS_FAIL,
     error,
   };
 };
 
 export const fetchOrderStart = () => {
   return {
-    type: actionTypes.FETCH_ORDER_START,
+    type: actionTypes.FETCH_ORDERS_START,
   };
 };
 
 export const fetchOrderInit = () => {
   return {
-    type: actionTypes.FETCH_ORDER_INIT,
+    type: actionTypes.FETCH_ORDERS_INIT,
   };
 };
 
