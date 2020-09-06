@@ -6,7 +6,7 @@ import classes from "./ContactData.module.css";
 import axios from "../../../axios-orders";
 import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandler';
 import Input from "../../../components/UI/Input/Input";
-import * as actionTypes from "../../../store/actions/index";
+import * as actions from "../../../store/actions/index";
 
 class ContactData extends Component {
   state = {
@@ -200,13 +200,13 @@ class ContactData extends Component {
 }
 
 const mapStateToProps = (state) => {
-  return { ingredients: state.burger.ingredients, price: state.burger.totalPice, loading: state.order.loading };
+  return { ingredients: state.burger.ingredients, price: state.burger.totalPrice, loading: state.order.loading };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     purchaseBurger: (orderData) =>
-      dispatch(actionTypes.purchaseBurger(orderData)),
+      dispatch(actions.purchaseBurger(orderData)),
   };
 };
 
