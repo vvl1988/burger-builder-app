@@ -7,6 +7,8 @@ import axios from "../../../axios-orders";
 import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandler';
 import Input from "../../../components/UI/Input/Input";
 import * as actions from "../../../store/actions/index";
+import createInputConfig from '../../../components/UI/Input/createInputConfig';
+import checkValidation from '../../../components/UI/Input/checkValidation';
 
 class ContactData extends Component {
   state = {
@@ -15,35 +17,35 @@ class ContactData extends Component {
   };
 
   componentWillMount() {
-    const name = this.createInputElementConfig(
+    const name = createInputConfig(
       "input",
       "text",
       "Your Name",
       "",
       { required: true }
     );
-    const street = this.createInputElementConfig(
+    const street = createInputConfig(
       "input",
       "text",
       "Street",
       "",
       { required: true }
     );
-    const zipCode = this.createInputElementConfig(
+    const zipCode = createInputConfig(
       "input",
       "text",
       "ZIP Code",
       "",
       { required: true, minLength: 5, maxLength: 5, isNumeric: true }
     );
-    const country = this.createInputElementConfig(
+    const country = createInputConfig(
       "input",
       "text",
       "Country",
       "",
       { required: true }
     );
-    const email = this.createInputElementConfig(
+    const email = createInputConfig(
       "input",
       "email",
       "Your Mail",
@@ -74,25 +76,7 @@ class ContactData extends Component {
     this.setState({ orderForm: orderForm });
   }
 
-  createInputElementConfig(
-    elementType,
-    type,
-    placeholder,
-    defaultValue,
-    validation
-  ) {
-    return {
-      elementType: elementType,
-      elementConfig: {
-        type: type,
-        placeholder: placeholder,
-      },
-      validation: validation,
-      isValid: false,
-      value: defaultValue,
-      touched: false,
-    };
-  }
+
   orderHandler = (event) => {
     event.preventDefault();
     const formData = {};
@@ -113,7 +97,7 @@ class ContactData extends Component {
     updatedFormElement.value = event.target.value;
     updatedFormElement.touched = true;
     if (updatedFormElement.validation) {
-      updatedFormElement.isValid = this.checkValidation(
+      updatedFormElement.isValid = checkValidation(
         updatedFormElement.value,
         updatedFormElement.validation
       );
@@ -127,36 +111,7 @@ class ContactData extends Component {
 
     this.setState({ orderForm: updatedOrderForm, formIsValid: formIsValid });
   };
-
-  checkValidation(value, rules) {
-    let isValid = true;
-    if (!rules) {
-      return true;
-    }
-    if (rules.required) {
-      isValid = isValid && value.trim() !== "";
-    }
-
-    if (rules.minLength) {
-      isValid = isValid && value.length >= rules.minLength;
-    }
-
-    if (rules.maxLength) {
-      isValid = isValid && value.length <= rules.maxLength;
-    }
-
-    if (rules.isEmail) {
-      const pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
-      isValid = pattern.test(value) && isValid;
-    }
-
-    if (rules.isNumeric) {
-      const pattern = /^\d+$/;
-      isValid = pattern.test(value) && isValid;
-    }
-
-    return isValid;
-  }
+ 
 
   render() {
     const inputElements = [];
