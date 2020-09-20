@@ -14,7 +14,7 @@ const authFail = (error) => {
   return { type: ActionTypes.AUTH_FAILED, error: error };
 };
 
-const logOut = () => {
+export const logOut = () => {
   return { type: ActionTypes.LOG_OUT };
 };
 
