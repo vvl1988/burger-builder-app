@@ -1,6 +1,6 @@
 import axios from "axios";
 import * as ActionTypes from "./actionTypes";
-import { FIRE_BASE_API } from "../../constant";
+import { FIRE_BASE_API } from "../../shared/constant";
 
 const authStart = () => {
   return { type: ActionTypes.AUTH_START };

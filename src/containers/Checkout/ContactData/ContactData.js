@@ -9,6 +9,7 @@ import Input from "../../../components/UI/Input/Input";
 import * as actions from "../../../store/actions/index";
 import createInputConfig from "../../../components/UI/Input/createInputConfig";
 import checkValidation from "../../../components/UI/Input/checkValidation";
+import { updateObject } from "../../../shared/utility";
 
 class ContactData extends Component {
   state = {
@@ -70,24 +71,25 @@ class ContactData extends Component {
       ingredients: this.props.ingredients,
       price: this.props.price,
       customer: formData,
-      userId: this.props.userId
+      userId: this.props.userId,
     };
     this.props.purchaseBurger(order, this.props.token);
   };
 
   inputChangedHandler = (event, inputID) => {
-    const updatedOrderForm = { ...this.state.orderForm };
-    const updatedFormElement = { ...updatedOrderForm[inputID] };
-    updatedFormElement.value = event.target.value;
-    updatedFormElement.touched = true;
-    if (updatedFormElement.validation) {
-      updatedFormElement.isValid = checkValidation(
-        updatedFormElement.value,
-        updatedFormElement.validation
-      );
+    const updatedOrderForm = updateObject(
+      this.state.orderForm,
+      {[inputID]:
+      updateObject(this.state.orderForm[inputID], {
+        value: event.target.value,
+        touched: true,
+        isValid: checkValidation(
+          event.target.value,
+          this.state.orderForm[inputID].validation
+        ),
+      })
     }
-    updatedOrderForm[inputID] = updatedFormElement;
-
+    );
     let formIsValid = true;
     for (let id in updatedOrderForm) {
       formIsValid = updatedOrderForm[id].isValid && formIsValid;
@@ -143,7 +145,7 @@ const mapStateToProps = (state) => {
     price: state.burger.totalPrice,
     loading: state.order.loading,
     token: state.auth.token,
-    userId: state.auth.userId
+    userId: state.auth.userId,
   };
 };
 

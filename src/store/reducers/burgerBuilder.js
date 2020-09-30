@@ -1,6 +1,6 @@
 import * as actionTypes from "../actions/actionTypes";
-import { updateObject } from "../utility";
-import { INGREDIENT_PRICES } from "../../constant";
+import { updateObject } from "../../shared/utility";
+import { INGREDIENT_PRICES } from "../../shared/constant";
 const initState = {
   ingredients: null,
   totalPrice: 4,

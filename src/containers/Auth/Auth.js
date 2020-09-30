@@ -8,6 +8,7 @@ import checkValidation from "../../components/UI/Input/checkValidation";
 import Button from "../../components/UI/Button/Button";
 import * as actions from "../../store/actions/index";
 import classes from "./Auth.module.css";
+import {updateObject} from "../../shared/utility";
 
 class Auth extends Component {
   state = {
@@ -38,18 +39,16 @@ class Auth extends Component {
   }
 
   inputChangedHandler = (event, inputID) => {
-    const updatedControls = {
-      ...this.state.controls,
-      [inputID]: {
-        ...this.state.controls[inputID],
+    const updatedControls = updateObject(this.state.controls, {
+      [inputID]: updateObject(this.state.controls[inputID], {
         value: event.target.value,
         touched: true,
         isValid: checkValidation(
           event.target.value,
           this.state.controls[inputID].validation
-        ),
-      },
-    };
+        )
+      })
+    });   
 
     let formIsValid = true;
     for (let id in updatedControls) {

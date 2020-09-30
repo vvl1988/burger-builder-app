@@ -1,6 +1,6 @@
 import * as actionTypes from "./actionTypes";
 import axios from "axios";
-import { FIRE_BASE_URL } from "../../constant";
+import { FIRE_BASE_URL } from "../../shared/constant";
 
 export const addIngredient = (ing) => {
   return { type: actionTypes.ADD_INGREDIENT, ing };
