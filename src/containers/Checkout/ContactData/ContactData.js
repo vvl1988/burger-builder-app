@@ -7,8 +7,8 @@ import axios from "../../../axios-orders";
 import withErrorHandler from "../../../hoc/withErrorHandler/withErrorHandler";
 import Input from "../../../components/UI/Input/Input";
 import * as actions from "../../../store/actions/index";
-import createInputConfig from "../../../components/UI/Input/createInputConfig";
-import checkValidation from "../../../components/UI/Input/checkValidation";
+import createInputConfig from "../../../shared/createInputConfig";
+import checkValidation from "../../../shared/checkValidation";
 import { updateObject } from "../../../shared/utility";
 
 class ContactData extends Component {
